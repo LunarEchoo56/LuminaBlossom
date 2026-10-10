@@ -46,7 +46,7 @@ Inside you'll find extensively commented code, build photos, and background mate
 10. [Using the Serial Monitor](/docs/serial_monitor.md)
 11. [Explanation of PIO State Machines](/docs/pio_state_machines.md)
 12. [Fun LED Technical Details](/docs/led_technical_details.md)
-13. [Build Journal](/docs/journal.md)
+13. [Build Journal](/JOURNAL.md)
 
 ---
 
