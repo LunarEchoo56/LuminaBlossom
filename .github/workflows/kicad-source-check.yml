@@ -1,0 +1,37 @@
+name: KiCad source export check
+
+on:
+  push:
+    paths:
+      - "hardware/kicad/**"
+      - ".github/workflows/kicad-source-check.yml"
+  pull_request:
+    paths:
+      - "hardware/kicad/**"
+      - ".github/workflows/kicad-source-check.yml"
+  workflow_dispatch:
+
+jobs:
+  parse-and-export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Parse and export with KiCad 9
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/work" \
+            -w /work \
+            kicad/kicad:9.0 \
+            sh -lc '
+              set -eu
+              kicad-cli version
+              mkdir -p /tmp/lb-schematic-svg /tmp/lb-board-svg
+              kicad-cli sch export svg --output /tmp/lb-schematic-svg hardware/kicad/luminablossom_carrier.kicad_sch
+              kicad-cli sch export netlist --output /tmp/luminablossom.net hardware/kicad/luminablossom_carrier.kicad_sch
+              kicad-cli pcb export svg --output /tmp/lb-board-svg --layers F.Cu,B.Cu,F.SilkS,Edge.Cuts hardware/kicad/luminablossom_carrier.kicad_pcb
+              test -s /tmp/luminablossom.net
+              test -n "$(find /tmp/lb-schematic-svg -type f -name "*.svg" -print -quit)"
+              test -n "$(find /tmp/lb-board-svg -type f -name "*.svg" -print -quit)"
+            '
