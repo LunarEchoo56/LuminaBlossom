@@ -31,7 +31,7 @@ browser on the network.
 ![Project logo](docs/images/luminablossom_logo.png)
 *The mark used throughout the documentation.*
 
-**Total time spent: 3 hours**
+**Total time spent: 1 hours**
 
 # July 7: Bill of materials and parts sourcing
 
@@ -57,7 +57,7 @@ depends on it.
 ![16-pixel NeoPixel ring](docs/images/assembly_neopixel.jpg)
 *The 16-pixel RGBW ring, before it gets soldered or mounted.*
 
-**Total time spent: 2.5 hours**
+**Total time spent: 1.5 hours**
 
 # July 8: LED fundamentals
 
@@ -82,7 +82,7 @@ comfortable, but there is no reason to run the array hot.
 ![NeoPixel close-up](docs/images/led-guide-neopixel.jpg)
 *The emitters up close - small, tightly packed and easy to overdrive.*
 
-**Total time spent: 4.5 hours**
+**Total time spent: 5.5 hours**
 
 # July 9: SK6812 signalling and 32-bit colour
 
@@ -108,7 +108,7 @@ sweep without harsh banding.
 ![Spiral colour pattern](docs/images/led-guide-spiral.jpg)
 *A colour sweep across the ring, used to sanity-check hue interpolation.*
 
-**Total time spent: 4 hours**
+**Total time spent: 5 hours**
 
 # July 10: PIO state machines and the wiring plan
 
@@ -139,7 +139,7 @@ Locked the pin plan:
 ![Wiring guide](docs/images/wiring.png)
 *The three connections drawn out before any soldering happened.*
 
-**Total time spent: 5 hours**
+**Total time spent: 5.5 hours**
 
 # July 11: Enclosure design and laser setup
 
@@ -168,7 +168,7 @@ Easier to sand and adjust a vector file than a sawn disk.
 ![Laser-cut parts](docs/images/laser_cut_parts.jpg)
 *The flat parts, freshly cut and ready to be glued.*
 
-**Total time spent: 3.5 hours**
+**Total time spent: 5.5 hours**
 
 # July 12: Cutting and gluing the case
 
@@ -194,7 +194,7 @@ edges means every mating surface needs sanding before the next step.
 ![Case halves and spindle](docs/images/assembly_02.png)
 *Case halves alongside the spindle that will raise and diffuse the lights.*
 
-**Total time spent: 4 hours**
+**Total time spent: 4.5 hours**
 
 # July 13: Lights, spindle and diffuser prep
 
@@ -226,7 +226,7 @@ the art clamped down hard.
 ![Artwork prepped for wiring](docs/images/assembly_art_prep.jpg)
 *The drilled hole in the artwork base, ready for three wires.*
 
-**Total time spent: 4.5 hours**
+**Total time spent: 5 hours**
 
 # July 15: Wiring the Pico 2W
 
@@ -251,7 +251,7 @@ halves.
 ![Pico sitting in the final assembly](docs/images/assembly_final_fit.jpg)
 *Test fit - everything clears the case halves.*
 
-**Total time spent: 4.5 hours**
+**Total time spent: 5.5 hours**
 
 # July 16: Final assembly
 
@@ -302,7 +302,7 @@ Order-of-operations rule filed here: if both the code and the `data/` folder cha
 ![Successful build message](docs/images/platformio_build_success.png)
 *First clean compile.*
 
-**Total time spent: 2.5 hours**
+**Total time spent: 3.5 hours**
 
 # July 18: Web interface and Wi-Fi provisioning
 
@@ -330,7 +330,7 @@ flow and read the handlers behind it:
 ![Interface overview](docs/images/readme_features.jpg)
 *The web control panel alongside the printed instructions.*
 
-**Total time spent: 3.5 hours**
+**Total time spent: 4 hours**
 
 # July 19: Animations, meditations and sign-off
 
@@ -367,4 +367,4 @@ Acceptance checks for the build:
 *Done - hand-built, network-connected, and running off the Pico 2W.*
 
 
-**Total time spent: 4 hours**
+**Total time spent: 4.5 hours**
