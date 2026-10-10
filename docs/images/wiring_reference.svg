@@ -1,30 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760">
-<rect width="1280" height="760" fill="#f7f9fc"/>
-<text x="54" y="58" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#172a43">LuminaBlossom — wiring reference</text>
-<text x="54" y="96" font-family="Arial,sans-serif" font-size="20" fill="#52637a">Pico 2 W + 74AHCT125 + 16-pixel RGBW NeoPixel ring</text>
-<rect x="65" y="160" width="330" height="400" rx="18" fill="#eaf1fb" stroke="#315b92" stroke-width="3"/>
-<text x="100" y="205" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#1d426b">Raspberry Pi Pico 2 W</text>
-<text x="100" y="242" font-family="Arial,sans-serif" font-size="18" fill="#35455e">Power via Micro-USB</text>
-<g font-family="Arial,sans-serif" font-size="21" fill="#1b2b40"><text x="100" y="312">Pin 40 — VBUS (5 V)</text><text x="100" y="370">Pin 38 — GND</text><text x="100" y="428">GP16 — physical pin 21</text></g>
-<g fill="#fff" stroke="#315b92" stroke-width="3"><circle cx="365" cy="306" r="7"/><circle cx="365" cy="364" r="7"/><circle cx="365" cy="422" r="7"/></g>
-<rect x="475" y="225" width="330" height="285" rx="18" fill="#fff4e7" stroke="#c18448" stroke-width="3"/>
-<text x="510" y="268" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#7e4b1e">74AHCT125 buffer</text>
-<text x="510" y="307" font-family="Arial,sans-serif" font-size="18" fill="#69441f">5 V logic-level shifter</text>
-<g font-family="Arial,sans-serif" font-size="20" fill="#593819"><text x="510" y="357">A input ← GP16</text><text x="510" y="405">Y output → LED DIN</text><text x="510" y="453">VCC → 5 V</text><text x="510" y="489">GND and /OE → GND</text></g>
-<rect x="880" y="160" width="335" height="400" rx="18" fill="#eaf8ed" stroke="#438250" stroke-width="3"/>
-<text x="915" y="205" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#285a34">16-pixel RGBW ring</text>
-<text x="915" y="242" font-family="Arial,sans-serif" font-size="18" fill="#365a3c">Preassembled NeoPixel / SK6812</text>
-<g font-family="Arial,sans-serif" font-size="21" fill="#244421"><text x="915" y="312">5V ← Pico VBUS</text><text x="915" y="370">GND ← common GND</text><text x="915" y="428">DIN ← buffer Y output</text></g>
-<circle cx="1047" cy="500" r="43" fill="#e0e8e3" stroke="#2f6b3e" stroke-width="3"/><circle cx="1047" cy="500" r="25" fill="#3b644d"/>
-<g fill="#ffe08a" stroke="#4b6652" stroke-width="2"><circle cx="1047" cy="449" r="8"/><circle cx="1067" cy="453" r="8"/><circle cx="1084" cy="467" r="8"/><circle cx="1097" cy="485" r="8"/><circle cx="1098" cy="506" r="8"/><circle cx="1087" cy="526" r="8"/><circle cx="1068" cy="540" r="8"/><circle cx="1047" cy="551" r="8"/><circle cx="1025" cy="541" r="8"/><circle cx="1007" cy="527" r="8"/><circle cx="996" cy="506" r="8"/><circle cx="997" cy="485" r="8"/><circle cx="1010" cy="466" r="8"/><circle cx="1027" cy="453" r="8"/><circle cx="1059" cy="473" r="8"/><circle cx="1069" cy="504" r="8"/></g>
-<path d="M372 422 H430 V356 H475" fill="none" stroke="#8a58c7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M805 405 H844 V428 H880" fill="none" stroke="#8a58c7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M372 306 H425 V453 H475" fill="none" stroke="#d84c4c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M805 453 H844 V312 H880" fill="none" stroke="#d84c4c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M372 364 H450 V489 H475" fill="none" stroke="#252b34" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M805 489 H845 V370 H880" fill="none" stroke="#252b34" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="65" y="605" width="1150" height="94" rx="14" fill="#fff1d5" stroke="#deb45a" stroke-width="2"/>
-<text x="90" y="637" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#654b16">Important</text>
-<text x="90" y="666" font-family="Arial,sans-serif" font-size="17" fill="#654b16">All grounds must be common. Use one buffer channel; tie active-low /OE low. Confirm the actual 74AHCT125 package pinout.</text>
-<text x="90" y="689" font-family="Arial,sans-serif" font-size="16" fill="#654b16">Illustrative connection guide, not a KiCad schematic or PCB layout. Follow component datasheets before powering.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="770" viewBox="0 0 1280 770">
+<rect width="1280" height="770" fill="#f7f9fc"/>
+<text x="52" y="55" font-family="Arial,sans-serif" font-size="33" font-weight="700" fill="#172a43">LuminaBlossom — carrier-board wiring</text>
+<text x="52" y="91" font-family="Arial,sans-serif" font-size="19" fill="#52637a">Pico 2 W → 74AHCT125N → 330 Ω → NeoPixel ring DIN</text>
+<rect x="55" y="155" width="300" height="330" rx="18" fill="#eaf1fb" stroke="#315b92" stroke-width="3"/>
+<text x="87" y="197" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#1d426b">Pico 2 W</text>
+<g font-family="Arial,sans-serif" font-size="20" fill="#1b2b40"><text x="87" y="260">Pin 40: VBUS (5 V)</text><text x="87" y="315">Pin 38: GND</text><text x="87" y="370">GP16 / pin 21: DATA</text></g>
+<rect x="430" y="190" width="260" height="240" rx="18" fill="#fff2e3" stroke="#c18448" stroke-width="3"/>
+<text x="466" y="232" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#7e4b1e">U1: SN74AHCT125N</text>
+<g font-family="Arial,sans-serif" font-size="19" fill="#593819"><text x="466" y="284">Pin 2 (1A) ← GP16</text><text x="466" y="326">Pin 3 (1Y) → R1</text><text x="466" y="368">Pin 14 (VCC) → +5 V</text><text x="466" y="410">Pin 7 (GND) → common GND</text></g>
+<rect x="760" y="235" width="155" height="100" rx="14" fill="#f3e7fb" stroke="#9462bb" stroke-width="3"/>
+<text x="795" y="273" font-family="Arial,sans-serif" font-size="24" font-weight="700" fill="#65358a">R1 330 Ω</text><text x="780" y="303" font-family="Arial,sans-serif" font-size="16" fill="#65358a">Series data resistor</text>
+<rect x="970" y="175" width="260" height="300" rx="18" fill="#eaf8ed" stroke="#438250" stroke-width="3"/>
+<text x="1007" y="216" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#285a34">J3 LED output</text>
+<g font-family="Arial,sans-serif" font-size="20" fill="#244421"><text x="1007" y="270">Pin 1: +5 V</text><text x="1007" y="320">Pin 2: GND</text><text x="1007" y="370">Pin 3: LED DIN</text></g>
+<path d="M355 260 H385 V368 H430" stroke="#d84c4c" stroke-width="4" fill="none" stroke-linejoin="round"/>
+<path d="M355 315 H390 V410 H430" stroke="#252b34" stroke-width="4" fill="none" stroke-linejoin="round"/>
+<path d="M355 370 H400 V284 H430" stroke="#2674c7" stroke-width="4" fill="none" stroke-linejoin="round"/>
+<path d="M690 326 H725 V285 H760" stroke="#9462bb" stroke-width="4" fill="none" stroke-linejoin="round"/>
+<path d="M915 285 H940 V370 H970" stroke="#9462bb" stroke-width="4" fill="none" stroke-linejoin="round"/>
+<rect x="55" y="535" width="1175" height="160" rx="15" fill="#ffffff" stroke="#aab8c9" stroke-width="2"/>
+<text x="83" y="574" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#273b54">Decoupling and bulk capacitance</text>
+<text x="83" y="614" font-family="Arial,sans-serif" font-size="19" fill="#273b54">C1: 100 nF across +5 V and GND close to U1.</text>
+<text x="83" y="650" font-family="Arial,sans-serif" font-size="19" fill="#273b54">C2: 470 µF / 10 V across +5 V and GND near J3; positive lead goes to +5 V.</text>
+<text x="83" y="681" font-family="Arial,sans-serif" font-size="17" fill="#52637a">All grounds common. Illustrative wiring reference, not a KiCad PCB render. Verify pinouts and power capacity before connecting.</text>
 </svg>
