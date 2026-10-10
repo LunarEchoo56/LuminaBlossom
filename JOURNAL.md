@@ -369,11 +369,5 @@ Acceptance checks for the build:
 ![Final product](docs/images/readme_final_product.jpg)
 *Done - hand-built, network-connected, and running off the Pico 2W.*
 
-**Still open at sign-off:**
-
-- Shorten the cold-boot BOOTSEL step, or accept it as a one-time cost per flash.
-- Re-check animation smoothness on a device that has been running warm for a few hours.
-- Give the rest of the `docs/` guides a final pass against the firmware to catch any stale
-  references.
 
 **Total time spent: 4 hours**
