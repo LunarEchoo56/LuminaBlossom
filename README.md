@@ -1,0 +1,82 @@
+# LuminaBlossom Programmable LED Light Display
+
+![LuminaBlossom Title Page](/docs/images/title_page.jpg)
+
+## A Playful Piece of Open-Source Art
+
+_Featured on the [Adafruit Blog](https://blog.adafruit.com/2026/08/11/wi-fi-enabled-pico-powered-neopixel-art-display-arttuesday/) and [FabScene](https://fabscene.com/new/make/blossom-raspberry-pi-pico-led-art/)_
+
+_LuminaBlossom_ is a standalone interactive art piece that connects to your local network. Control it from any web browser and vibe along with customizable ambient light displays or guided meditations!
+
+Inside the handcrafted wooden case you'll find a Raspberry Pi Pico 2W connected to a 16-light RGBW NeoPixel array. For this build I've used a beautiful 20-petal capiz shell lotus blossom tealight candle holder and a frosted glass cabochon to create a cozy blend of modern tech and natural materials.
+
+<table>
+  <tr>
+    <td width="600">
+
+https://github.com/user-attachments/assets/ee2256e5-a6fd-4887-a5ad-c2fb7382c757
+
+</td>
+  </tr>
+</table>
+
+
+## Features
+
+* **Wi-Fi Enabled**: LuminaBlossom acts as its own web server, connecting to your local network and allowing you to interact with it from any device.
+* **No Apps Required**: Use any web browser to interact with your LuminaBlossom. There's nothing to download and all your data stays local.
+* **Create Animations**: Iteratively play with color gradients and noise patterns while the LuminaBlossom updates in real-time.
+* **Play Meditations**: Practice mindfulness with guided breathing exercises.
+* **Control from Any Device**: Simply connect to `luminablossom.local` from any web browser. Savvy users can also write their own programs to update LuminaBlossom via HTTP.
+
+---
+
+## 100% Open Source
+
+Build your own LuminaBlossom with all of the project files enclosed! Laser cutter/engraver patterns, wiring guides, and the complete source code are included in this repository.
+
+![Preview of the Enclosure Construction Files](/docs/images/readme_plans_preview.png)
+
+## A Project for Learning
+
+Inside you'll find extensively commented code, build photos, and background materials about the technology we're using. This is a great beginner-to-intermediate project: if you're looking to move away from breadboards and start embedding remote hardware into real-world devices, this is the place. Topics covered include LED tech, laser woodworking, web provisioning, and even PIO assembly code.
+
+![Assembly In-Progress Close-Up](/docs/images/readme_assembly_preview.jpg)
+
+---
+
+## Repository Table of Contents
+
+1. [Instruction Manual](docs/instructions.md)
+2. [Animation Guide](docs/animation_guide.md)
+3. [Meditation Guide](docs/meditations.md)
+4. [HTTP API](docs/api.md)
+5. [Illustrated Assembly Instructions](/docs/assembly.md)
+6. [Bill of Materials](/docs/assembly.md#1-bill-of-materials)
+7. [Software Installation Guide](/docs/installation.md)
+8. [Build and Upload Guide](/docs/build_and_upload.md)
+9. [Extensively Commented C++ Source](/src)
+10. [Using the Serial Monitor](/docs/serial_monitor.md)
+11. [Explanation of PIO State Machines](/docs/pio_state_machines.md)
+12. [Fun LED Technical Details](/docs/led_technical_details.md)
+13. [Build Journal](/docs/journal.md)
+
+---
+
+![Images of features, including the web control panel and printed instructions.](/docs/images/readme_features.jpg)
+
+---
+
+## License: Make and Share!
+
+Software: Licensed under the Apache License 2.0. Feel free to modify, distribute, and use it commercially. See the `LICENSE` file.
+
+Hardware/Enclosure Design: Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). You are free to share and adapt the physical design, provided you give appropriate credit. Additional info in `\enclosure\README.md`.
+
+---
+
+![The Final Product](/docs/images/readme_final_product.jpg)
+
+---
+
+_Keep Technology Kind_

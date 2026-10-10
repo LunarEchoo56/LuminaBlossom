@@ -1,0 +1,99 @@
+# Animation Guide: LuminaBlossom Programmable Light Display
+
+LuminaBlossom's animator is designed around two ideas:
+
+1. Make it iterative to play different colors and patterns
+2. Keep animations state-free and mathematical
+
+The first idea keeps LuminaBlossom friendly to play with: artists can change colors or flicker patterns just by sliding their thumb along the controls, watching the results in real-time. The second ensures that LuminaBlossom's animations are infinite and can be described quickly by sending just a few parameters over the local network.
+
+The resulting animations are generally ambient loops that emulate a colorful, magical flame.
+
+https://github.com/user-attachments/assets/a1dfe79e-bccb-4c35-a51d-3a526a6722f9
+
+---
+
+## Table of Contents
+
+1. [Sixteen Special Sparkly Lights](#1-sixteen-special-sparkly-lights)
+2. [Setting Color and Sparkle Ranges](#2-setting-color-and-sparkle-ranges)
+3. [Flickers, Pulses, and Spins](#3-flickers-pulses-and-spins)
+4. [Saving Presets](#4-saving-presets)
+5. [Controlling LuminaBlossom from Any Connected Device](#5-controlling-luminablossom-from-any-connected-device)
+
+---
+
+# 1. Sixteen Special Sparkly Lights
+
+LuminaBlossom's ring of light is composed of 16 RGBW LEDs. "RGBW" ("Red, Green, Blue, White") means that each light can be set to any color (the "red, green, and blue" part) in addition to having an additional white light on top of it.
+
+>[!TIP]
+> Take a deep-dive into the LEDs we're using and how they work in LuminaBlossom's [LED Technical Details](/docs/led_technical_details.md).
+
+LuminaBlossom's separate ring of white lights gives artists the opportunity to play one animation across the color LEDs while playing a _different_ animation on the white lights. In the interface, the two channels are treated completely separate, named *colors* and *sparkles.*
+
+At the top of the animation interface artists define two ranges: a color range for the color lights, and a brightness range for the sparkles. Then, artists can choose how the lights cycle through these ranges by applying animations.
+
+---
+
+# 2. Setting Color and Sparkle Ranges
+
+When we set the LuminaBlossom's color, we provide it with a primary color and a range, resulting in a spectrum. It's like picking a direction on a color wheel and then defining how big of an arc of colors to use.
+
+![The Color Wheel, with primary colors (red, green, blue) highlighted](/docs/images/animation_colorwheel.png)
+
+- A range a 0 means that the lights won't vary from the selected color at all.
+- Selecting a small range will cause the lights to fluctuate in a narrow color band centered on the selected color. For example, selecting orange and a low range will generate a nice warm spectrum from red to yellow.
+- Moving the range slider to maximum means that LuminaBlossom's lights can cycle through the entire color spectrum, with the chosen color determining the spectrum's "centerpoint."
+
+The white "Sparkle" lights that encircle the blossom cannot change color, only brightness. To set up sparkle animations, select a primary brightness and a range.
+
+- A range of 0 means that all sparkle lights will have the same brightness
+- A maximum range means the lights will vary from full brightness to completely off, with the selected brightness acting as the "centerpoint."
+
+Although LuminaBlossom's web-based animation interface will preview colors and ranges, the best way to see results is on the LuminaBlossom itself. When connected, it will respond instantly to changes on the web interface.
+
+>[!TIP]
+>To properly see spreads, make sure no animations are playing (deselect any flickers, pulses, or spins on either channel.) When looking at color spreads, the sparkle lights can be overpowering, so it's best to turn them off completely. (Off means brightness of 0 in addition to 0 spread!)
+
+- *Unison:* All of the lights display the selected color or brightness.
+- *Ordered:* The range is spread equally across all 16 lights.
+- *Looping:* Half the lights display the range, which is mirrored on the other half to create a seamless "loop."
+- *Random:* The range is "randomly" distributed among the lights.
+
+>[!TIP]
+>"Random" is actually a mathematical criss-crossing pattern that spreads out the lights all around the ring.
+
+Once artists lock in the color and brightness ranges, they can apply animations to cycle LuminaBlossom's lights through their selections.
+
+---
+
+# 3. Flickers, Pulses, and Spins
+
+Three different animations (or any combination thereof!) can be applied to the lights based off of the color and brightness spreads defined above.
+
+![Illustrating a Pulse vs a Flicker pattern on a color gradient.](/docs/images/animation_pulse_flicker.png)
+
+- A *Pulse* is a smooth sine-wave pattern alternating between the two ends of the range.
+- A *Flicker* is a random noise pattern peaking toward either end of the range.
+
+Artists can adjust the speed and amplitude of these patterns to get the desired effect.
+
+The _Synchronicity_ of the animations determines how they are played out across the lights. As with color or brightness spreads, "Unison" plays all the lights together, "Ordered" plays animations in a loop around the ring, and "Random" spreads the animation across all the lights so they appear to be acting on their own.
+
+- The *Spin* animation is applied last, shifting the lights clockwise or counter-clockwise around the ring.
+
+---
+
+# 4. Saving Presets
+
+Clicking "Save Preset" at the bottom of the animation interface allows artists to name and save their favorite animations. From this same interface, the "Make Default" checkbox makes the selected preset the default whenever the device is powered on - even if it's unable to connect!
+
+The "Now Playing" area at the top of the animation interface lists the currently playing preset. Clicking here opens up a list of saved presets, with the default marked by a star.
+
+---
+
+# 5. Controlling LuminaBlossom from Any Connected Device
+
+The LuminaBlossom is built to be controlled from any device on your network! If you're a maker, tinkerer, or engineer into the whole "Internet of Things," you can explore other ways of controlling LuminaBlossom aside from the provided web interface. The [HTTP API Guide](/docs/api.md) explains it all.
+

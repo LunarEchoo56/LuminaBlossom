@@ -1,0 +1,541 @@
+#include "web_handlers.h"
+#include "credentials.h"
+#include "led_controller.h"
+#include "animation_config.h"
+#include "presets.h"
+#include <LittleFS.h>
+#include <WiFi.h>
+
+// Offline Mode session flag: when true, provisioning AP serves connected.html
+// at root instead of provisioning.html, giving full animation/meditation control
+// without leaving AP mode. Reset to false on boot or via /setup route.
+static bool offlineMode = false;
+
+// Stream a file from LittleFS to the client
+static void serveFile(const char* path, const char* contentType) {
+  File file = LittleFS.open(path, "r");
+  if (file) {
+    server.streamFile(file, contentType);
+    file.close();
+  } else {
+    server.send(404, "text/plain", "File not found");
+  }
+}
+
+// Fonts are big (~500KB combined) and never change; let clients cache them so
+// captive-portal sheets and browsers only pay the transfer cost once. This
+// matters a lot on iOS, where the portal WebView re-opens frequently.
+static void serveCachedFile(const char* path, const char* contentType) {
+  server.sendHeader("Cache-Control", "public, max-age=86400, immutable");
+  serveFile(path, contentType);
+}
+
+static void handleProvisioningRoot() {
+  // Conditional root serving: if offline mode is active in provisioning AP,
+  // serve the connected page so users get animation/meditation controls.
+  if (offlineMode) {
+    serveFile("/connected.html", "text/html");
+  } else {
+    serveFile("/provisioning.html", "text/html");
+  }
+}
+
+static void handleConnectedRoot() {
+  serveFile("/connected.html", "text/html");
+}
+
+static void handleMeditationRoot() {
+  serveFile("/meditation.html", "text/html");
+}
+
+
+static void handleGlutenFont() {
+  serveCachedFile("/fonts/Gluten.ttf", "font/ttf");
+}
+
+static void handleFredokaFont() {
+  serveCachedFile("/fonts/Fredoka.ttf", "font/ttf");
+}
+
+// Offline Mode entry: sets offline flag and redirects to root, which will now
+// serve connected.html while staying in provisioning AP mode.
+static void handleOffline() {
+  offlineMode = true;
+  Serial.println("Entered Offline Mode (AP remains active)");
+  server.sendHeader("Location", "/", true);
+  server.send(302, "text/plain", "");
+}
+
+// Setup Mode return: clears offline flag and redirects to root, which will now
+// serve provisioning.html again, allowing users to scan/connect without reboot.
+static void handleSetup() {
+  offlineMode = false;
+  Serial.println("Returned to Setup Mode");
+  server.sendHeader("Location", "/", true);
+  server.send(302, "text/plain", "");
+}
+
+static void handleConnect() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"No data received\"}");
+    return;
+  }
+
+  String body = server.arg("plain");
+
+  int ssidStart = body.indexOf("\"ssid\":\"") + 8;
+  int ssidEnd   = body.indexOf("\"", ssidStart);
+  int passStart = body.indexOf("\"password\":\"") + 12;
+  int passEnd   = body.indexOf("\"", passStart);
+
+  if (ssidStart < 8 || ssidEnd < 0 || passStart < 12 || passEnd < 0) {
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.send(400, "application/json", "{\"error\":\"Invalid JSON format\"}");
+    return;
+  }
+
+  String ssid     = body.substring(ssidStart, ssidEnd);
+  String password = body.substring(passStart, passEnd);
+
+  Serial.print("Connect request - SSID: ");
+  Serial.println(ssid);
+  Serial.print("Password: ");
+  for (int i = 0; i < password.length(); i++) Serial.print("*");
+  Serial.println();
+
+  // Save credentials while AP is fully up — no radio contention
+  saveCredentials(ssid, password);
+
+  // Respond before the AP disappears
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", "{\"status\":\"saved\"}");
+
+  // Deferred reboot via main.cpp — gives TCP stack time to flush the response
+  scheduleReboot(1500);
+  Serial.println("Credentials saved. Rebooting in 1.5s to test connection...");
+}
+
+static void handleStatus() {
+  String json = "{";
+
+  // Report mode context so UI can detect offline vs connected state.
+  // In offline mode (provisioning AP), we're not connected to a network.
+  if (offlineMode) {
+    json += "\"status\":\"offline\",";
+    json += "\"offline\":true,";
+    json += "\"ssid\":\"LuminaBlossom_Setup\",";  // AP SSID
+    json += "\"ip\":\"";
+    json += WiFi.softAPIP().toString();  // AP IP (192.168.4.1)
+    json += "\",";
+    json += "\"rssi\":0";  // No RSSI in AP mode
+  } else {
+    json += "\"status\":\"connected\",";
+    json += "\"offline\":false,";
+    json += "\"ssid\":\"";
+    json += WiFi.SSID();
+    json += "\",";
+    json += "\"ip\":\"";
+    json += WiFi.localIP().toString();
+    json += "\",";
+    json += "\"rssi\":";
+    json += String(WiFi.RSSI());
+  }
+  json += "}";
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", json);
+}
+
+static void handleLedStatus() {
+  String json = "{\"led\":";
+  json += ledState ? "true" : "false";
+  json += "}";
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", json);
+}
+
+static void handleLedToggle() {
+  ledState = !ledState;
+  digitalWrite(LED_BUILTIN, ledState ? HIGH : LOW);
+  setLedsEnabled(ledState);
+
+  Serial.print("LED toggled: ");
+  Serial.println(ledState ? "ON" : "OFF");
+
+  String json = "{\"led\":";
+  json += ledState ? "true" : "false";
+  json += "}";
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", json);
+}
+
+// NOTE: The flat-JSON parsing helpers (jsonParseUint8, jsonParseBool, etc.)
+// used to live here, but presets.cpp needs them too — they moved to the
+// presets module (see presets.h) so both files share one implementation.
+
+static void handleLeds() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"No data received\"}");
+    return;
+  }
+
+  String body = server.arg("plain");
+
+  // Parse "enabled" field from JSON
+  bool enabled = jsonParseBool(body, "enabled");
+
+  ledState = enabled;
+  digitalWrite(LED_BUILTIN, ledState ? HIGH : LOW);
+  setLedsEnabled(ledState);
+
+  Serial.print("LEDs set: ");
+  Serial.println(ledState ? "ON" : "OFF");
+
+  String json = "{\"enabled\":";
+  json += ledState ? "true" : "false";
+  json += "}";
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", json);
+}
+
+static void handleAnimation() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"No data received\"}");
+    return;
+  }
+
+  String body = server.arg("plain");
+
+  // Parse the flat-key config JSON into a LuminaBlossomConfig (shared parser in
+  // presets.cpp) and apply it. A hand-tweaked config is by definition not a
+  // named preset anymore, so the "Now Playing" title becomes "Custom".
+  LuminaBlossomConfig config = parseConfigFromJson(body);
+  applyActiveConfig(config, "Custom");
+
+  Serial.println("Animation config updated:");
+  Serial.print("  Color: primary=");
+  Serial.print(config.color.primary);
+  Serial.print(" spread=");
+  Serial.print(config.color.spread);
+  Serial.print(" brightness=");
+  Serial.println(config.color.brightness);
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", "{\"status\":\"success\"}");
+}
+
+// GET /api/animation — report the currently running config (plus the
+// now-playing name) so a freshly opened web page can sync its controls to
+// what's actually on the ring instead of assuming hard-coded defaults.
+static void handleAnimationGet() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", getActiveConfigJson());
+}
+
+// ── Preset endpoints ──────────────────────────────────────────────────────────
+
+// GET /api/presets — list all saved presets, plus which one is playing and
+// which one is the boot default. The web page uses this to build the
+// scrap-paper preset picker.
+static void handlePresetList() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", getPresetListJson());
+}
+
+// POST /api/presets/save — body: {"name":"...","makeDefault":true, ...config}
+// Saves the supplied config under the given name (overwriting any preset with
+// the same name) and optionally marks it as the boot default.
+static void handlePresetSave() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"No data received\"}");
+    return;
+  }
+
+  String body        = server.arg("plain");
+  String name        = jsonParseString(body, "name");
+  bool   makeDefault = jsonParseBool(body, "makeDefault");
+  LuminaBlossomConfig config = parseConfigFromJson(body);
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  if (savePreset(name, config, makeDefault)) {
+    // Echo back the (possibly cleaned-up) name now shown as "Now Playing"
+    String json = "{\"status\":\"saved\",\"name\":\"";
+    json += currentPresetName;
+    json += "\"}";
+    server.send(200, "application/json", json);
+  } else {
+    server.send(400, "application/json", "{\"error\":\"Could not save preset\"}");
+  }
+}
+
+// POST /api/presets/load — body: {"name":"..."}
+// Applies the named preset to the LEDs and returns its full config JSON so
+// the web page can update every slider/radio/checkbox to match.
+static void handlePresetLoad() {
+  if (!server.hasArg("plain")) {
+    server.send(400, "application/json", "{\"error\":\"No data received\"}");
+    return;
+  }
+
+  String name = jsonParseString(server.arg("plain"), "name");
+  String presetJson;
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  if (loadPreset(name, presetJson)) {
+    server.send(200, "application/json", presetJson);
+  } else {
+    server.send(404, "application/json", "{\"error\":\"Preset not found\"}");
+  }
+}
+
+// ── Async WiFi scan ───────────────────────────────────────────────────────────
+// WiFi.scanNetworks() (blocking form) freezes Core 0 for 2-5 seconds: no DNS
+// replies, no HTTP responses. That's fatal for captive portals — iOS keeps
+// re-probing hotspot-detect.html while its portal sheet is open, and if those
+// probes time out it declares the network dead. So we run the scan
+// asynchronously: the first GET /api/scan kicks off a background scan and
+// returns {"scanning":true}; the page polls until results are ready.
+
+static bool scanInProgress = false;
+
+// Build the {"networks":[...]} JSON from the completed scan results.
+static String buildScanJson(int numNetworks) {
+  String json = "{\"networks\":[";
+  bool firstNetwork = true;
+  String addedSSIDs[50];
+  int addedCount = 0;
+
+  for (int i = 0; i < numNetworks && i < 50; i++) {
+    String ssid = WiFi.SSID(i);
+    int    rssi = WiFi.RSSI(i);
+
+    if (ssid.length() == 0) continue;  // Skip hidden networks
+
+    bool isDuplicate = false;
+    for (int j = 0; j < addedCount; j++) {
+      if (addedSSIDs[j] == ssid) { isDuplicate = true; break; }
+    }
+    if (isDuplicate) continue;
+
+    if (!firstNetwork) json += ",";
+    json += "{\"ssid\":\"";
+    json += ssid;
+    json += "\",\"rssi\":";
+    json += String(rssi);
+    json += ",\"encryption\":";
+    json += String(WiFi.encryptionType(i));
+    json += "}";
+
+    addedSSIDs[addedCount++] = ssid;
+    firstNetwork = false;
+  }
+
+  json += "]}";
+  return json;
+}
+
+static void handleScan() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Cache-Control", "no-store");
+
+  if (!scanInProgress) {
+    // Kick off a non-blocking scan and tell the client to poll back.
+    Serial.println("WiFi scan started (async)...");
+    WiFi.scanDelete();
+    WiFi.scanNetworks(true);  // async=true: returns immediately
+    scanInProgress = true;
+    server.send(200, "application/json", "{\"scanning\":true}");
+    return;
+  }
+
+  int numNetworks = WiFi.scanComplete();
+  if (numNetworks < 0) {
+    // Still scanning — client should poll again shortly.
+    server.send(200, "application/json", "{\"scanning\":true}");
+    return;
+  }
+
+  Serial.print("Scan complete. Found ");
+  Serial.print(numNetworks);
+  Serial.println(" networks.");
+
+  String json = buildScanJson(numNetworks);
+  scanInProgress = false;
+  server.send(200, "application/json", json);
+  WiFi.scanDelete();
+}
+
+// ── Meditation Mode endpoints ──────────────────────────────────────────────────
+
+// POST /api/meditation/start — body: {"duration": 0|30|60} (0 = open-ended)
+static void handleMeditationStart() {
+  uint32_t duration = 0;
+  if (server.hasArg("plain")) {
+    duration = (uint32_t)jsonParseUint8(server.arg("plain"), "duration");
+    // jsonParseUint8 caps at 255, which comfortably covers 0/30/60; if a
+    // future duration option exceeds a byte, switch to a wider parser.
+  }
+
+  startMeditation(duration);
+
+  Serial.print("Meditation started, duration=");
+  Serial.println(duration);
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", "{\"status\":\"started\"}");
+}
+
+// POST /api/meditation/stop — ends the session immediately (no ending blink)
+static void handleMeditationStop() {
+  stopMeditation();
+  Serial.println("Meditation stopped");
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", "{\"status\":\"stopped\"}");
+}
+
+// GET /api/meditation/status — polled by meditation.html at a steady clip to
+// drive the on-screen instructions ("Inhale", "Hold", "Exhale"...) in sync
+// with the LEDs.
+static void handleMeditationStatus() {
+  MeditationStatus status = getMeditationStatus();
+
+  String json = "{";
+  json += "\"active\":";
+  json += status.active ? "true" : "false";
+  json += ",\"phase\":\"";
+  json += meditationPhaseToString(status.phase);
+  json += "\",\"phaseSecondsLeft\":";
+  json += String(status.phaseSecondsLeft);
+  json += ",\"sessionSecondsElapsed\":";
+  json += String(status.sessionSecondsElapsed);
+  json += ",\"sessionSecondsRemaining\":";
+  json += String(status.sessionSecondsRemaining);
+  json += "}";
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", json);
+}
+
+// Captive portal detection: when devices get anything other than the expected
+// "success" response from their probe URLs, they know they're behind a captive
+// portal and show the login UI.
+//
+// Windows and Android are happy chasing a 302 redirect, but Apple's Captive
+// Network Assistant (CNA) on iOS is noticeably slower and flakier with
+// redirects: the background probe triggers the sheet, then the CNA WebView
+// re-fetches the SAME probe URL and must follow the redirect (new TCP
+// connection, new request) before anything paints. On a single-connection
+// web server that round-trip contends with iOS's parallel re-probes and can
+// stall for seconds. Instead, we answer Apple probes with a tiny 200 page
+// that paints instantly in the CNA sheet and immediately hops to the portal.
+
+static const char APPLE_CNA_PAGE[] =
+  "<!DOCTYPE html><html><head>"
+  "<meta charset=\"UTF-8\">"
+  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+  "<meta http-equiv=\"refresh\" content=\"0;url=http://192.168.4.1/\">"
+  "<title>LuminaBlossom Setup</title></head>"
+  "<body style=\"font-family:-apple-system,sans-serif;text-align:center;padding-top:60px\">"
+  "<p>Opening LuminaBlossom setup&hellip;</p>"
+  "<p><a href=\"http://192.168.4.1/\">Tap here if nothing happens</a></p>"
+  "</body></html>";
+
+// iOS/macOS probe endpoints: 200 + instant mini-page (fast CNA popup)
+static void handleAppleCaptiveDetect() {
+  server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  server.send(200, "text/html", APPLE_CNA_PAGE);
+}
+
+// Windows/Android probe endpoints: 302 redirect (proven fast on those OSes)
+static void handleCaptiveDetect() {
+  server.sendHeader("Location", "http://192.168.4.1/", true);
+  server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  server.send(302, "text/plain", "");
+}
+
+static void handleNotFound() {
+  // Redirect all unknown routes to root — helps with captive portal detection
+  server.sendHeader("Location", "http://192.168.4.1/", true);
+  server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+  server.send(302, "text/plain", "");
+}
+
+void setupProvisioningRoutes() {
+  // Root serves provisioning.html normally, or connected.html when offline flag is set
+  server.on("/", handleProvisioningRoot);
+
+  // Offline Mode control routes
+  server.on("/offline", handleOffline);  // Enter offline mode
+  server.on("/setup",   handleSetup);    // Return to setup mode
+
+  // Captive portal detection endpoints - trigger the OS portal UI
+  // iOS/macOS detection: 200 + instant mini-page (see handleAppleCaptiveDetect)
+  server.on("/hotspot-detect.html", handleAppleCaptiveDetect);
+  server.on("/library/test/success.html", handleAppleCaptiveDetect);
+  server.on("/success.txt", handleAppleCaptiveDetect);
+  // Windows detection
+  server.on("/connecttest.txt", handleCaptiveDetect);
+  server.on("/redirect", handleCaptiveDetect);
+  server.on("/ncsi.txt", handleCaptiveDetect);
+  // Android/Chrome detection
+  server.on("/generate_204", handleCaptiveDetect);
+  server.on("/gen_204", handleCaptiveDetect);
+
+  // Pages and assets (shared across setup and offline modes)
+  server.on("/meditation.html", handleMeditationRoot);
+  server.on("/fonts/Gluten.ttf",  handleGlutenFont);
+  server.on("/fonts/Fredoka.ttf", handleFredokaFont);
+
+  // Setup-specific APIs (credential provisioning)
+  server.on("/api/scan",    handleScan);
+  server.on("/api/connect", HTTP_POST, handleConnect);
+
+  // Connected-mode APIs (needed when offline mode is active in provisioning AP)
+  // These allow animation/meditation control while AP is running
+  server.on("/api/status", handleStatus);
+  server.on("/api/led", HTTP_GET, handleLedStatus);
+  server.on("/api/led/toggle", HTTP_POST, handleLedToggle);
+  server.on("/api/leds", HTTP_POST, handleLeds);
+  server.on("/api/animation", HTTP_GET,  handleAnimationGet);
+  server.on("/api/animation", HTTP_POST, handleAnimation);
+  server.on("/api/presets",      HTTP_GET,  handlePresetList);
+  server.on("/api/presets/save", HTTP_POST, handlePresetSave);
+  server.on("/api/presets/load", HTTP_POST, handlePresetLoad);
+  server.on("/api/meditation/start",  HTTP_POST, handleMeditationStart);
+  server.on("/api/meditation/stop",   HTTP_POST, handleMeditationStop);
+  server.on("/api/meditation/status", HTTP_GET,  handleMeditationStatus);
+
+  server.onNotFound(handleNotFound);
+  server.begin();
+  //Serial.println("✓ Web server started on port 80");
+  //Serial.println("\n=================================");
+  //Serial.println("Connect to WiFi: LuminaBlossom_Setup");
+  //Serial.println("Open browser: http://192.168.4.1");
+  //Serial.println("=================================\n");
+}
+
+void setupConnectedRoutes() {
+  server.on("/", handleConnectedRoot);
+  server.on("/meditation.html", handleMeditationRoot);
+  server.on("/fonts/Gluten.ttf",  handleGlutenFont);
+  server.on("/fonts/Fredoka.ttf", handleFredokaFont);
+  server.on("/api/status", handleStatus);
+  server.on("/api/led", HTTP_GET, handleLedStatus);
+  server.on("/api/led/toggle", HTTP_POST, handleLedToggle);
+  server.on("/api/leds", HTTP_POST, handleLeds);
+  server.on("/api/animation", HTTP_GET,  handleAnimationGet);
+  server.on("/api/animation", HTTP_POST, handleAnimation);
+  server.on("/api/presets",      HTTP_GET,  handlePresetList);
+  server.on("/api/presets/save", HTTP_POST, handlePresetSave);
+  server.on("/api/presets/load", HTTP_POST, handlePresetLoad);
+  server.on("/api/meditation/start",  HTTP_POST, handleMeditationStart);
+  server.on("/api/meditation/stop",   HTTP_POST, handleMeditationStop);
+  server.on("/api/meditation/status", HTTP_GET,  handleMeditationStatus);
+  server.onNotFound(handleNotFound);
+  server.begin();
+  //Serial.println("✓ Web server started (connected mode)");
+}
