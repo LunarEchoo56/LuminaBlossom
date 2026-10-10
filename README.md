@@ -8,17 +8,6 @@ _LuminaBlossom_ is a standalone interactive art piece that connects to your loca
 
 Inside the handcrafted wooden case you'll find a Raspberry Pi Pico 2W connected to a 16-light RGBW NeoPixel array. For this build I've used a beautiful 20-petal capiz shell lotus blossom tealight candle holder and a frosted glass cabochon to create a cozy blend of modern tech and natural materials.
 
-<table>
-  <tr>
-    <td width="600">
-
-https://github.com/user-attachments/assets/ee2256e5-a6fd-4887-a5ad-c2fb7382c757
-
-</td>
-  </tr>
-</table>
-
-
 ## Features
 
 * **Wi-Fi Enabled**: LuminaBlossom acts as its own web server, connecting to your local network and allowing you to interact with it from any device.

@@ -39,7 +39,7 @@ You'll want a copy (or "clone") of all the local source files somewhere on your 
 
 ### Option A: Grab the .zip file from the website
 
-1. Scroll to the top of the [LuminaBlossom GitHub homepage](https://github.com/YourUsername/LuminaBlossom).
+1. Scroll to the top of the [LuminaBlossom GitHub homepage](https://github.com/LunarEchoo56/LuminaBlossom).
 2. Click the green **Code** button (located near the top right of the file list).
 3. Click **Download ZIP** from the dropdown menu.
 4. Once downloaded, extract (unzip) the file in a working directory of your choice.
@@ -54,7 +54,7 @@ If you are comfortable using a terminal or command prompt, you can clone the rep
 3. Run the following command:
 
 ```bash
-git clone https://github.com/YourUsername/LuminaBlossom.git
+git clone https://github.com/LunarEchoo56/LuminaBlossom.git
 ```
 
 *Note: This requires you to have [Git installed](https://git-scm.com/) on your computer.*

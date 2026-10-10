@@ -9,8 +9,6 @@ The first idea keeps LuminaBlossom friendly to play with: artists can change col
 
 The resulting animations are generally ambient loops that emulate a colorful, magical flame.
 
-https://github.com/user-attachments/assets/a1dfe79e-bccb-4c35-a51d-3a526a6722f9
-
 ---
 
 ## Table of Contents

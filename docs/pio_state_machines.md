@@ -197,7 +197,7 @@ The PIO state machines are simple enough that we can imagine doing this by hand.
 
 The designers of the Raspberry Pi Pico 2W provide an SDK that includes something called the "pioasm" (PIO Assembler). This takes raw assembly code and outputs a C header (.h) file with the complete machine configuration and code. Using this, your C program can initialize a PIO state machine with ease. Other people have written other tools that do the compiling for you: the code above was written in MicroPython. MicroPython (and the related CircuitPython language) can assemble that code on the fly and upload it to your PIO when needed.
 
-Recently, there's another way to get our final code, thanks to large language model AI. Converting this stuff to binary is a walk in the park for an advanced model, and in fact Claude looked at the MicroPython code above and converted it in one go. The results:
+Recently, there's another way to get our final code, thanks to large language model AI. Converting this stuff to binary is a walk in the park for an advanced model, and a frontier model can convert the MicroPython code above in a single pass. The results:
 
     static const uint16_t ws2812_program_instructions[] = {
         //        Instruction                side  delay

@@ -1,9 +1,7 @@
 // ###########################################################################
 //                               LUMINABLOSSOM
 //                  WiFi-Enabled Programmable Light Display
-//
 //                                July, 2026
-//       AI Models Consulted: Gemini 3.5 Thinking, Claude Sonnet 4.5-4.6
 // ###########################################################################
 //
 //  Project: LuminaBlossom - WiFi-Enabled Programmable Light Display
