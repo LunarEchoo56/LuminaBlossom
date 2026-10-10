@@ -1,0 +1,13 @@
+Item,Component,Quantity,Specification / Notes,Example Supplier URL(s)
+1,"Raspberry Pi Pico 2 W",1,"Wi-Fi-capable controller; the non-wireless Pico 2 is not a substitute for network features.","https://www.adafruit.com/product/6087; https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html"
+2,"16-pixel RGBW NeoPixel ring (SK6812)",1,"Preassembled LED ring PCB; connect 5 V, ground and data input.","https://www.adafruit.com/product/2854"
+3,"74AHCT125 logic-level shifter",1,"Reference buffer for translating Pico GP16 3.3 V logic to the 5 V NeoPixel data level. Confirm the package pinout; use a common ground and hold active-low /OE low.","https://www.adafruit.com/product/1787"
+4,"Capiz-shell lotus tealight holder or compatible decorative blossom",1,"Decorative part; substitute a compatible holder if the pictured style is unavailable.","https://www.worldmarket.com/p/capiz-20-petal-lotus-tealight-candle-holder-119956.html"
+5,"50 mm frosted-glass cabochon or translucent diffuser",1,"A translucent acrylic disc is an alternative.","https://www.amazon.com/dp/B07JKZP1Z6"
+6,"3 mm basswood or birch plywood","About 8 x 12 in","For the laser-cut base; confirm actual pattern scale and material before cutting.","Local craft/lumber supplier"
+7,"Micro-USB data cable",1,"Must support data for firmware uploads.","https://www.amazon.com/Charging-Transfer-Android-Trustable-MYFON/dp/B098DW7485/"
+8,"5 V USB power adapter","1; 1 A or suitably rated","Ensure the adapter/cable can supply the Pico and LEDs at the selected brightness.","https://www.amazon.com/Certified-Charger-Universal-Portable-Adapter/dp/B017TXGM4I/"
+9,"M2 screws, 6 mm",4,"For mounting the Pico to the wooden base.","https://www.amazon.com/HVAZI-Metric-Notebook-Computer-Assortment/dp/B075C6C4YR/; https://www.mcmaster.com/91698A202/"
+10,"#6 wood screws, 1/2 in",3,"For fastening the enclosure halves.","https://www.amazon.com/TPOHH-Stainless-Phillips-Threaded-5x12SS18-8/dp/B092Q87W39/; https://www.mcmaster.com/90031A552/"
+11,"Self-adhesive rubber feet",3,"Cover the screw heads and prevent slipping.","https://www.adafruit.com/product/550; https://www.amazon.com/dp/B074PXFWPK"
+12,"Wood glue, solder and finishing materials","As needed","Assembly consumables; stain, Danish oil and hot glue depend on the chosen finish.","Local hardware/craft supplier"

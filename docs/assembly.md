@@ -22,6 +22,7 @@ Building your own LuminaBlossom from scratch? Great idea! This is the perfect st
 | :--- | :---: | ---: | :--- | :--- |
 | **Raspberry Pi Pico 2W** | 1 | $7.00 | [Adafruit](https://www.adafruit.com/product/6087) [Microcenter](https://www.microcenter.com/product/687384/raspberry-pi-pico-2-w) | Our heroic microcontroller! Make sure to get the "2W." |
 | **Adafruit NeoPixel Ring (16-pixel) RGBW** | 1 | $11.95 | [Adafruit](https://www.adafruit.com/product/2854) | Beautiful pre-assembled circular array of RGBW LEDs. I prefer warm-white. |
+| **74AHCT125 logic-level shifter** | 1 | ~$1.50+ | [Adafruit](https://www.adafruit.com/product/1787) | Translates Pico GP16 (3.3 V logic) to a 5 V NeoPixel data signal; check package pinout. |
 | **Capiz-Shell Decorative Lotus Art** | 1 | ~$10.00+ | (See notes) | Any decorative tea-light holder will work; See notes below for sourcing the beautiful capiz-shell assembly shown.  |
 | **50mm Frosted-Glass Cabochon** | 1 | ~$1.50+ | [Amazon](https://www.amazon.com/dp/B07JKZP1Z6) | This acts as a diffuser to bounce our LED lights around; a 50mm translucent acrylic circle is an inexpensive alternative. |
 | **3mm (1/8-in) Basswood or Birch Plywood** | 1 | ~$4.00 | Local Lumber / Craft Store | You'll need roughly 8"x12" of wood for laser cutting the case. |
@@ -30,7 +31,7 @@ Building your own LuminaBlossom from scratch? Great idea! This is the perfect st
 | **M2 Screws (6mm)** | 4 | $.40 | [Amazon](https://www.amazon.com/HVAZI-Metric-Notebook-Computer-Assortment/dp/B075C6C4YR/) / [McMaster-Carr](https://www.mcmaster.com/91698A202/) / [MicroConnectors](https://www.microconnectors.com/assorted-laptop-screws-set-250-pcs-scw-250lp/)| For securing the Pico 2W to the wooden base. |
 | **#6 Wood Screws (1/2in)** | 3 | $.75 | [Amazon](https://www.amazon.com/TPOHH-Stainless-Phillips-Threaded-5x12SS18-8/dp/B092Q87W39/) / [McMaster-Carr](https://www.mcmaster.com/90031A552/) | For fastening the two halves of the base enclosure. |
 | **Rubber Feet (Self-Adhesive)** | 3 | $1.00 | [Adafruit](https://www.adafruit.com/product/550) [Amazon](https://www.amazon.com/dp/B074PXFWPK/ref=twister_B092W7TL7Y) | These little guys really elevate your build. (Looks directly at camera.) |
-| **TOTAL ESTIMATED COST** | | **~$48.00** | | *Excludes workshop consumables (solder, wire).* |
+| **TOTAL ROUGH ESTIMATE** | | **~$50+** | | *Planning estimate only; verify current pricing. Excludes shipping and workshop consumables; actual cost varies by materials and supplier.* |
 
 >[!TIP]
 >**Sourcing a Tea-Light Holder**:
@@ -131,13 +132,17 @@ Our objective is to glue the spindle to the artwork, and the artwork to the encl
 
 If you've never soldered anything onto a PCB before, now's the time to learn. This project requires soldering only six connections, and if you've already wired your lights and spindle, you're halfway there.
 
-![LuminaBlossom Wiring Guide.](images/wiring.png)
+![LuminaBlossom wiring reference](images/wiring_reference.svg)
 
-We must make the following connections:
+Use the level-shifted data path shown above. All grounds must be connected together.
 
-* NeoPixel Power -> Pico Pin 40 ("VBUS")
-* NeoPixel Ground -> Pico Pin 38 ("Ground" - 33, 28, and 23 also work)
-* NeoPixel Data -> Pico Pin 21 ("GP16")
+* Pico pin 40 (`VBUS`, 5 V from USB) -> NeoPixel ring `5V` and 74AHCT125 `VCC`
+* Pico pin 38 (`GND`) -> NeoPixel ring `GND` and level-shifter `GND`
+* Pico GP16 (physical pin 21) -> 74AHCT125 input (A)
+* 74AHCT125 output (Y) -> NeoPixel ring `DIN`
+* 74AHCT125 active-low `/OE` -> `GND`
+
+Use one channel of the 74AHCT125 and confirm the exact package pinout before wiring. The Pico GPIO is 3.3 V logic, whereas the LED ring is powered at 5 V; a compatible buffer improves data-signal margin. Check continuity before applying power. The pictured assembly shows the general component arrangement, not a custom PCB.
 
 ![Wiring finished and Pico attached.](images/assembly_wiring_complete.jpg)
 

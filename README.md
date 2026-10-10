@@ -1,69 +1,166 @@
-# LuminaBlossom Programmable LED Light Display
+# LuminaBlossom — Wi-Fi-Controlled Lotus Light
 
-![LuminaBlossom Title Page](/docs/images/title_page.jpg)
+![Finished LuminaBlossom light display](docs/images/readme_final_product.jpg)
 
-## A Playful Piece of Open-Source Art
+*Finished physical build: the illuminated blossom, diffuser and wooden base.*
 
-_LuminaBlossom_ is a standalone interactive art piece that connects to your local network. Control it from any web browser and vibe along with customizable ambient light displays or guided meditations!
+LuminaBlossom is an interactive ambient light built around a **Raspberry Pi Pico 2 W** and a **16-pixel RGBW NeoPixel ring**, housed in a laser-cut wooden base beneath a decorative lotus blossom. It hosts a local web interface for lighting patterns, custom animations and guided breathing meditations. Control it from a browser on your local network—no companion app or cloud account is required.
 
-Inside the handcrafted wooden case you'll find a Raspberry Pi Pico 2W connected to a 16-light RGBW NeoPixel array. For this build I've used a beautiful 20-petal capiz shell lotus blossom tealight candle holder and a frosted glass cabochon to create a cozy blend of modern tech and natural materials.
+## What it does and why it exists
 
-## Features
+The project combines handcrafted decorative art with programmable light. Instead of being a fixed-colour lamp, LuminaBlossom can change its colours and animation in response to settings you choose, or guide a breathing exercise with coordinated light. Its Wi-Fi setup flow is designed to make the device usable from a phone, tablet or computer without installing an app.
 
-* **Wi-Fi Enabled**: LuminaBlossom acts as its own web server, connecting to your local network and allowing you to interact with it from any device.
-* **No Apps Required**: Use any web browser to interact with your LuminaBlossom. There's nothing to download and all your data stays local.
-* **Create Animations**: Iteratively play with color gradients and noise patterns while the LuminaBlossom updates in real-time.
-* **Play Meditations**: Practice mindfulness with guided breathing exercises.
-* **Control from Any Device**: Simply connect to `luminablossom.local` from any web browser. Savvy users can also write their own programs to update LuminaBlossom via HTTP.
+## What you can do
 
----
+- **Control it in a browser:** after joining your Wi-Fi network, open `http://luminablossom.local` on a device on the same LAN.
+- **Create light patterns:** adjust colour, brightness, pulse, flicker, sparkle and other animation settings.
+- **Save and reuse presets:** store named animation configurations on the device.
+- **Run guided meditations:** use a breathing exercise with matching light transitions.
+- **Provision Wi-Fi locally:** first-time setup uses the device's `LuminaBlossom_Setup` access point.
+- **Keep the project hackable:** firmware, browser pages, enclosure cutting patterns and assembly instructions are included.
 
-## 100% Open Source
+## Photos, electronics and manufacturing references
 
-Build your own LuminaBlossom with all of the project files enclosed! Laser cutter/engraver patterns, wiring guides, and the complete source code are included in this repository.
+### Finished hardware and assembly
 
-![Preview of the Enclosure Construction Files](/docs/images/readme_plans_preview.png)
+![Finished LuminaBlossom product](docs/images/readme_final_product.jpg)
 
-## A Project for Learning
+*Finished product photo from the build documentation.*
 
-Inside you'll find extensively commented code, build photos, and background materials about the technology we're using. This is a great beginner-to-intermediate project: if you're looking to move away from breadboards and start embedding remote hardware into real-world devices, this is the place. Topics covered include LED tech, laser woodworking, web provisioning, and even PIO assembly code.
+![Electronics installed during assembly](docs/images/assembly_wiring_complete.jpg)
 
-![Assembly In-Progress Close-Up](/docs/images/readme_assembly_preview.jpg)
+*Assembly photo showing the Pico 2 W and wiring before the case is closed.*
 
----
+![Laser-cut wooden enclosure parts](docs/images/laser_cut_parts.jpg)
 
-## Repository Table of Contents
+*Cut wooden layers before final assembly.*
 
-1. [Instruction Manual](docs/instructions.md)
-2. [Animation Guide](docs/animation_guide.md)
-3. [Meditation Guide](docs/meditations.md)
-4. [HTTP API](docs/api.md)
-5. [Illustrated Assembly Instructions](/docs/assembly.md)
-6. [Bill of Materials](/docs/assembly.md#1-bill-of-materials)
-7. [Software Installation Guide](/docs/installation.md)
-8. [Build and Upload Guide](/docs/build_and_upload.md)
-9. [Extensively Commented C++ Source](/src)
-10. [Using the Serial Monitor](/docs/serial_monitor.md)
-11. [Explanation of PIO State Machines](/docs/pio_state_machines.md)
-12. [Fun LED Technical Details](/docs/led_technical_details.md)
-13. [Build Journal](/JOURNAL.md)
+### What the browser interface looks like
 
----
+![Browser control panel and printed instructions](docs/images/readme_features.jpg)
 
-![Images of features, including the web control panel and printed instructions.](/docs/images/readme_features.jpg)
+*Feature overview: web control panel alongside the project's printed instructions.*
 
----
+### Wiring reference
 
-## License: Make and Share!
+![Reference wiring diagram for the Pico 2 W, logic-level shifter and NeoPixel ring](docs/images/wiring_reference.svg)
 
-Software: Licensed under the Apache License 2.0. Feel free to modify, distribute, and use it commercially. See the `LICENSE` file.
+*Connection diagram for the build described in this repository. The Pico, LED ring and level shifter must share a ground.*
 
-Hardware/Enclosure Design: Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). You are free to share and adapt the physical design, provided you give appropriate credit. Additional info in `\enclosure\README.md`.
+### LED ring PCB component
 
----
+![Commercial 16-pixel RGBW NeoPixel ring PCB](docs/images/led-guide-neopixel.jpg)
 
-![The Final Product](/docs/images/readme_final_product.jpg)
+*The off-the-shelf NeoPixel ring used as a component reference. This is **not** a custom LuminaBlossom PCB.*
 
----
+### Laser-cut source preview
 
-_Keep Technology Kind_
+![Preview of the two-dimensional laser-cut enclosure patterns](docs/images/readme_plans_preview.png)
+
+*This is a preview of the 2D cutting/engraving layout, not a 3D CAD model.*
+
+## Hardware design files: what is actually included
+
+The enclosure design files already exist in the repository:
+
+- **[Laser-cut SVG source](enclosure/luminablossom.svg)** — editable 2D vector paths for the wooden base/spindle parts. It can be imported into compatible laser-cutting software.
+- **[xTool Studio source project](enclosure/luminablossom.xs)** — native xTool project file for use with xTool Studio.
+- **[Enclosure file notes](enclosure/README.md)** — intended material, file descriptions and licensing.
+- **[Illustrated assembly guide](docs/assembly.md)** — dimensions/material notes, photos and build sequence.
+
+### PCB and 3D model status
+
+There is **no custom PCB design** in this repository. The electronics use a Raspberry Pi Pico 2 W development board and a preassembled 16-pixel NeoPixel ring connected by wiring. The wiring diagram above is an assembly reference; it is not a KiCad schematic or PCB layout.
+
+There is also **no Fusion 360, STEP/STP or STL model** in the repository. The enclosure is designed as stacked laser-cut 2D parts, not as a 3D-printable housing. No fabrication-ready PCB or 3D model is being claimed here. If a future revision creates custom PCB or 3D CAD files, add the native editable sources alongside any exported manufacturing files.
+
+## Wiring
+
+The firmware sends LED data on **GP16 (physical Pico pin 21)**. Use a 5 V-compatible logic buffer such as a 74AHCT125 between the Pico's 3.3 V GPIO output and the NeoPixel ring's data input. The code comment in `src/led_controller.cpp` assumes a level shifter is present.
+
+| Connection | Destination |
+|---|---|
+| Pico pin 40 (`VBUS`, 5 V from USB) | NeoPixel ring `5V` and level-shifter `VCC` |
+| Pico pin 38 (`GND`) | NeoPixel `GND` and level-shifter `GND` |
+| Pico GP16 (physical pin 21) | Level-shifter input |
+| Level-shifter output | NeoPixel ring `DIN` |
+| Level-shifter active-low `/OE` | `GND` |
+
+Use one channel of the 74AHCT125 and check the exact component/package pinout before wiring. Keep the data path short and connect all grounds together. The default firmware caps LED brightness at 20%; verify the USB supply and wiring before increasing brightness.
+
+## How to assemble
+
+1. **Check the parts and patterns.** Review the [BOM below](#bill-of-materials) and the [enclosure notes](enclosure/README.md). The pictured enclosure uses 3 mm birch plywood; check scale and kerf on your laser cutter before cutting the full set.
+2. **Cut the wooden parts.** Use [`enclosure/luminablossom.svg`](enclosure/luminablossom.svg) with compatible cutting software, or [`enclosure/luminablossom.xs`](enclosure/luminablossom.xs) with xTool Studio. Validate laser power, speed and scale on scrap material.
+3. **Build and finish the case.** Glue the wooden layers into the top and bottom assemblies, sand/stain/finish as desired, and let finishes cure before fitting electronics.
+4. **Prepare the blossom and diffuser.** Fit the decorative lotus piece and cabochon/diffuser to the spindle arrangement, then route the three LED leads through the base as described in the [full assembly guide](docs/assembly.md).
+5. **Wire the electronics.** Connect ring power and ground, and route GP16 through a 5 V logic buffer to the ring's data input. Confirm pin labels and continuity before powering it.
+6. **Close the case.** Secure the Pico, check that no wire is pinched, fit the screws and rubber feet, then connect USB power.
+
+Use the [full illustrated assembly guide](docs/assembly.md) for the detailed procedure, photos and safety notes. Laser cutting, soldering and drilling require suitable ventilation, eye protection and secure workholding.
+
+## Build and flash the firmware
+
+The project uses PlatformIO with the Arduino framework for Pico 2 W (Earle Philhower Arduino-Pico core).
+
+1. Install VS Code and the PlatformIO extension, then open this repository as a project.
+2. Use a **data-capable Micro-USB cable** to connect a Raspberry Pi Pico **2 W** (not the non-wireless Pico 2).
+3. Build the firmware:
+
+   ```sh
+   pio run
+   ```
+
+4. Upload the filesystem from the `data/` folder:
+
+   ```sh
+   pio run --target uploadfs
+   ```
+
+5. Upload the firmware:
+
+   ```sh
+   pio run --target upload
+   ```
+
+If the board is not detected for the first upload, hold **BOOTSEL** while connecting USB, then retry. When both code and `data/` files have changed, upload the filesystem first and the firmware second. See the [build and upload guide](docs/build_and_upload.md) for detailed instructions.
+
+### First-time Wi-Fi setup
+
+On first boot, connect a phone or computer to the `LuminaBlossom_Setup` Wi-Fi access point and follow the provisioning page to enter your home Wi-Fi details. Once the device has joined the network, open `http://luminablossom.local` from a device on the same local network. Some networks or operating systems do not resolve `.local` hostnames reliably; use the IP address printed in the serial monitor if needed.
+
+## Known issues and practical notes
+
+- **Pico 2 W matters:** the standard Pico 2 has no Wi-Fi radio, so it cannot provide the same network features.
+- **LED data voltage:** GP16 is 3.3 V logic while the NeoPixel ring is powered at 5 V. Use a 74AHCT125 or equivalent buffer for reliable signal levels; do not assume a direct wire will work with every ring.
+- **Power and brightness:** the firmware brightness cap is 20%. Check the USB supply and wiring before raising it or displaying all channels at full intensity.
+- **Filesystem updates:** changes under `data/` require `pio run --target uploadfs`; uploading only the firmware does not update those files.
+- **Local hostname:** `luminablossom.local` depends on mDNS support on the client network. Check the serial monitor for the device IP if hostname resolution fails.
+- **No custom PCB/3D CAD:** only the SVG and xTool Studio laser-cut sources are supplied for the enclosure. There are no KiCad, Gerber, Fusion, STEP/STP or STL files at this time.
+
+## Credits and licences
+
+- The hardware uses a [Raspberry Pi Pico 2 W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) and an [Adafruit 16-pixel RGBW NeoPixel ring](https://www.adafruit.com/product/2854).
+- The [74AHCT125 level shifter](https://www.adafruit.com/product/1787) is listed as the reference option for translating 3.3 V logic to the ring's 5 V data level.
+- The Fredoka and Gluten font licence notices are included under [`data/fonts/`](data/fonts/).
+- **Software:** Apache License 2.0; see [LICENSE](LICENSE).
+- **Enclosure vector design:** Creative Commons Attribution 4.0 International (CC BY 4.0); see [enclosure/README.md](enclosure/README.md). Component vendor pages and third-party assets remain subject to their own terms.
+
+## Bill of Materials
+
+The root-level [`BOM.csv`](BOM.csv) contains the same parts list in spreadsheet-friendly form. Supplier links are examples to help identify parts; availability, pricing and regional alternatives may change. The logic-level shifter is included because the firmware's wiring notes assume one.
+
+| Part | Qty. | Example link | Notes |
+|---|---:|---|---|
+| Raspberry Pi Pico 2 W | 1 | [Adafruit](https://www.adafruit.com/product/6087) · [Raspberry Pi documentation](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) | Must be the wireless **2 W** model. |
+| 16-pixel RGBW NeoPixel ring (SK6812) | 1 | [Adafruit](https://www.adafruit.com/product/2854) | Preassembled LED ring PCB; connect 5 V, ground and data input. |
+| 74AHCT125 logic-level shifter | 1 | [Adafruit](https://www.adafruit.com/product/1787) | Buffers GP16's 3.3 V data signal to 5 V logic; verify package pinout. |
+| Capiz-shell lotus tealight holder or compatible decorative blossom | 1 | [Example design](https://www.worldmarket.com/p/capiz-20-petal-lotus-tealight-candle-holder-119956.html) | Decorative part; substitute a compatible piece as needed. |
+| 50 mm frosted-glass cabochon or translucent diffuser | 1 | [Example](https://www.amazon.com/dp/B07JKZP1Z6) | A translucent acrylic disc can also work. |
+| 3 mm basswood or birch plywood | About 8 × 12 in | Local craft/lumber supplier | For the laser-cut base; confirm actual pattern scale and material. |
+| Micro-USB data cable | 1 | [Example](https://www.amazon.com/Charging-Transfer-Android-Trustable-MYFON/dp/B098DW7485/) | Must support data for firmware uploads. |
+| 5 V USB power adapter, 1 A or suitably rated | 1 | [Example](https://www.amazon.com/Certified-Charger-Universal-Portable-Adapter/dp/B017TXGM4I/) | Ensure the adapter/cable can safely supply the Pico and LEDs at your selected brightness. |
+| M2 screws, 6 mm | 4 | [Amazon example](https://www.amazon.com/HVAZI-Metric-Notebook-Computer-Assortment/dp/B075C6C4YR/) · [McMaster-Carr](https://www.mcmaster.com/91698A202/) | To mount the Pico to the wooden base. |
+| #6 wood screws, 1/2 in | 3 | [Amazon example](https://www.amazon.com/TPOHH-Stainless-Phillips-Threaded-5x12SS18-8/dp/B092Q87W39/) · [McMaster-Carr](https://www.mcmaster.com/90031A552/) | To fasten the enclosure halves. |
+| Self-adhesive rubber feet | 3 | [Adafruit](https://www.adafruit.com/product/550) · [Amazon example](https://www.amazon.com/dp/B074PXFWPK) | Cover the screw heads and keep the base from slipping. |
+| Wood glue, solder and finishing materials | As needed | Local hardware/craft supplier | Assembly consumables; stain, Danish oil and hot glue are optional finishes/adhesives. |
