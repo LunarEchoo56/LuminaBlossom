@@ -27,11 +27,11 @@ jobs:
             sh -lc '
               set -eu
               kicad-cli version
-              mkdir -p /tmp/lb-schematic-svg /tmp/lb-board-svg
+              mkdir -p /tmp/lb-schematic-svg
               kicad-cli sch export svg --output /tmp/lb-schematic-svg hardware/kicad/luminablossom_carrier.kicad_sch
               kicad-cli sch export netlist --output /tmp/luminablossom.net hardware/kicad/luminablossom_carrier.kicad_sch
-              kicad-cli pcb export svg --output /tmp/lb-board-svg --layers F.Cu,B.Cu,F.SilkS,Edge.Cuts hardware/kicad/luminablossom_carrier.kicad_pcb
+              kicad-cli pcb export svg --mode-single --output /tmp/lb-board.svg --layers F.Cu,B.Cu,F.SilkS,Edge.Cuts hardware/kicad/luminablossom_carrier.kicad_pcb
               test -s /tmp/luminablossom.net
               test -n "$(find /tmp/lb-schematic-svg -type f -name "*.svg" -print -quit)"
-              test -n "$(find /tmp/lb-board-svg -type f -name "*.svg" -print -quit)"
+              test -s /tmp/lb-board.svg
             '
