@@ -4,8 +4,6 @@
 
 ## A Playful Piece of Open-Source Art
 
-_Featured on the [Adafruit Blog](https://blog.adafruit.com/2026/08/11/wi-fi-enabled-pico-powered-neopixel-art-display-arttuesday/) and [FabScene](https://fabscene.com/new/make/blossom-raspberry-pi-pico-led-art/)_
-
 _LuminaBlossom_ is a standalone interactive art piece that connects to your local network. Control it from any web browser and vibe along with customizable ambient light displays or guided meditations!
 
 Inside the handcrafted wooden case you'll find a Raspberry Pi Pico 2W connected to a 16-light RGBW NeoPixel array. For this build I've used a beautiful 20-petal capiz shell lotus blossom tealight candle holder and a frosted glass cabochon to create a cozy blend of modern tech and natural materials.
