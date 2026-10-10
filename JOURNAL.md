@@ -7,14 +7,12 @@ created_at: "2026-07-06"
 
 # July 6: Scoping the build and touring the repository
 
-Read the top-level `README.md` and worked through the full repository table of contents before
-touching any tools. The project is a standalone interactive art piece: a Raspberry Pi Pico 2W
-joined to a 16-pixel RGBW NeoPixel array, mounted inside a hand-built wooden case, driven from
+A Raspberry Pi Pico 2W joined to a 16-pixel RGBW NeoPixel array, mounted inside a hand-built wooden case, driven from
 a browser instead of an app.
 
 Decisions made in this session:
 
-- Build against the **Pico 2W (RP2350)**, not a Pico 2 - the 2W carries the wireless radio the
+- Built against the **Pico 2W (RP2350)**, not a Pico 2 - the 2W carries the wireless radio the
   whole web-control story depends on.
 - Keep the device **entirely local**: it serves its own pages over the LAN and holds its own
   state, so no data leaves the house.
@@ -112,7 +110,6 @@ sweep without harsh banding.
 
 # July 10: PIO state machines and the wiring plan
 
-Hit the five-hour cap exactly and stopped rather than push on.
 
 The RP2350 carries **PIO state machines** - small independent processors with their own 64-byte
 instruction store, where every instruction is only 16 bits. The insight is that the CPU does not
