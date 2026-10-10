@@ -28,9 +28,6 @@ browser on the network.
 ![The project title page](docs/images/title_page.jpg)
 *The finished piece - the target the whole build is aiming at.*
 
-![Full cover image](docs/images/title_page_full_image.jpg)
-*The cover shot at full size; the capiz-shell lotus diffuser is doing a lot of the work here.*
-
 ![Project logo](docs/images/luminablossom_logo.png)
 *The mark used throughout the documentation.*
 
