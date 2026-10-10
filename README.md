@@ -23,10 +23,6 @@ The project combines handcrafted decorative art with programmable light. Instead
 
 ### Finished hardware and assembly
 
-![Finished LuminaBlossom product](docs/images/readme_final_product.jpg)
-
-*Finished product photo from the build documentation.*
-
 ![Electronics installed during assembly](docs/images/assembly_wiring_complete.jpg)
 
 *Assembly photo showing the Pico 2 W and wiring before the case is closed.*
@@ -142,7 +138,7 @@ On first boot, connect a phone or computer to the `LuminaBlossom_Setup` Wi-Fi ac
 
 - The hardware uses a [Raspberry Pi Pico 2 W](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html) and an [Adafruit 16-pixel RGBW NeoPixel ring](https://www.adafruit.com/product/2854).
 - The [74AHCT125 level shifter](https://www.adafruit.com/product/1787) is listed as the reference option for translating 3.3 V logic to the ring's 5 V data level.
-- The Fredoka and Gluten font licence notices are included under [`data/fonts/`](data/fonts/).
+- The Fredoka and Gluten font licence notices are available as [Fredoka OFL](data/fonts/FredokaOFL.txt) and [Gluten OFL](data/fonts/Gluten_OFL.txt).
 - **Software:** Apache License 2.0; see [LICENSE](LICENSE).
 - **Enclosure vector design:** Creative Commons Attribution 4.0 International (CC BY 4.0); see [enclosure/README.md](enclosure/README.md). Component vendor pages and third-party assets remain subject to their own terms.
 
